@@ -3,6 +3,7 @@ package br.com.yoursupplierapp.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -24,5 +25,8 @@ public class OrderEntity {
 
     @OneToOne(mappedBy = "order")
     private PaymentEntity paymentEntity;
+
+    @OneToMany(mappedBy = "order")
+    private List<ProductEntity> products;
 
 }

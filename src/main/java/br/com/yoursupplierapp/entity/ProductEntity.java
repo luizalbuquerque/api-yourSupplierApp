@@ -19,5 +19,7 @@ public class ProductEntity {
     @JoinColumn(name = "warehouse_id")
     private WarehouseEntity warehouse;
 
-
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private OrderEntity order;
 }
