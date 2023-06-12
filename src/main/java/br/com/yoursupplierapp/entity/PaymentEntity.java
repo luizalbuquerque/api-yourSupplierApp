@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "payment")
+@Table(name = "payments")
 public class PaymentEntity {
 
     @Id
@@ -15,6 +15,7 @@ public class PaymentEntity {
     private Long idPayment;
 
     @OneToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "id_order")
     private OrderEntity order;
+
 }

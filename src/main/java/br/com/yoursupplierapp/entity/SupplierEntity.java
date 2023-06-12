@@ -8,6 +8,6 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "supplier")
+@Table(name = "suppliers")
 public class SupplierEntity extends UserEntity {
 }

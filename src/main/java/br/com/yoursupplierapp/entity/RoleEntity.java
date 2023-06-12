@@ -3,14 +3,19 @@ package br.com.yoursupplierapp.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class RoleEntity {
 
-        @Id
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idRole;
 
-        private String name;
+    private String name;
+
+    @ManyToMany(mappedBy = "roles")
+    private List<GroupEntity> groups;
 }

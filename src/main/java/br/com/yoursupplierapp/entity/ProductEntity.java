@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 public class ProductEntity {
 
     @Id
@@ -17,6 +17,7 @@ public class ProductEntity {
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private WarehouseEntity warehouseEntity;
+    private WarehouseEntity warehouse;
+
 
 }

@@ -3,18 +3,19 @@ package br.com.yoursupplierapp.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "warehouse")
+@Table(name = "warehouses")
 public class WarehouseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idWarehouse;
 
-    @OneToOne(mappedBy = "warehouseEntity")
-    private ProductEntity product;
+    @OneToMany(mappedBy = "warehouse")
+    private List<ProductEntity> products;
 
-    private Integer quantity;
+
 }
