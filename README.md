@@ -1,7 +1,7 @@
 
-# Agenda bridge WL
+#  Microservise Yor Supplier App
 
-API bridge para comunicação entre agenda central e WL - TASY
+API Microservise Yor Supplier App
 
 
 ## Tecnologias necessárias
@@ -17,7 +17,7 @@ API bridge para comunicação entre agenda central e WL - TASY
 
 ## Inicializar docker
 
-Para inicializar docker, seu banco local, abra seu terminal de preferencia e aplique o comando na seguir na raiz do seu projeto \agenda-bridge-wl.
+Para inicializar docker, seu banco local, abra seu terminal de preferencia e aplique o comando na seguir na raiz do seu projeto \yoursupplierapp.
 
 ```bash
   docker compose up
@@ -39,7 +39,7 @@ Para inicializar docker, seu banco local, abra seu terminal de preferencia e apl
 #### Você ver se a aplicação está de pé usando Health Checker.
 
 ```http
-  http://localhost:8080/api-bridge/health-check
+  http://localhost:8080/api-yoursupplierapp/health-check
 ```
 
 
