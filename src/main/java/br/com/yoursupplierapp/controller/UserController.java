@@ -51,4 +51,12 @@ public class UserController {
         }
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> update(
+            @RequestBody UserDTO userDTO,
+            @PathVariable("id") Long id) {
+        return userService.updateUserById(userDTO, id);
+    }
+
 }

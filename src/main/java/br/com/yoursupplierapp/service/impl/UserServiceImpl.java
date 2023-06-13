@@ -10,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
 import java.util.Optional;
 
 import static br.com.yoursupplierapp.utils.ConstantUtils.DUPLICATED_USER;
@@ -45,24 +46,43 @@ public class UserServiceImpl implements UserService {
         try {
             Optional<UserEntity> clientOptional = userRepository.findById(id);
             if (!clientOptional.isPresent()) {
-                throw new BusinessException("Cliente com número de ID: " + id + " não foi encontrado no sistema!");
+                throw new BusinessException("User id number: " + id + " not found in system!");
             }
             UserEntity client = clientOptional.get();
             return ResponseEntity.ok(client);
         } catch (EmptyResultDataAccessException ex) {
-            throw new BusinessException("Cliente com número de ID: " + id + " não foi encontrado no sistema!");
+            throw new BusinessException("User id number: " + id + " not found in system!");
         }
     }
 
+    public ResponseEntity<String> updateUserById(UserDTO userDTO, Long id) {
+        try {
+            UserEntity existingClient = userRepository.findById(id)
+                    .orElseThrow(() -> new BusinessException("User id number: " + id + " not found in system!"));
 
+            // Update customer fields based on dto data
+            existingClient.setUserName(userDTO.getUserName());
+            existingClient.setEmail(userDTO.getEmail());
+            existingClient.setPassword(userDTO.getPassword());
+//          existingClient.setUserStatus(CardStatus.ATIVO);
+            existingClient.setPassword(userDTO.getPassword());
+
+            // Saving changes on the database
+            userRepository.save(existingClient);
+
+            return ResponseEntity.ok("User updated successfully");
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().body("Error updating client: " + e.getMessage());
+        }
+    }
 
     @Override
     public void isExistentUser(UserRepository userRepository, UserDTO userDTO) throws BusinessException {
         if (userRepository.findUserNameByEmail(userDTO.getEmail()).isPresent()) {
-            throw new BusinessException("Usuario com email: " + userDTO.getEmail() + " já cadastrado no sistema!");
+            throw new BusinessException("User with email: " + userDTO.getEmail() + " already registered in the system!");
         }
         if (userRepository.findByUserName(userDTO.getUserName()).isPresent()) {
-            throw new BusinessException("Usuario com nome: " + userDTO.getUserName() + " já cadastrado no sistema!");
+            throw new BusinessException("User with name: " + userDTO.getUserName() + " already registered in the system!");
         }
     }
 }

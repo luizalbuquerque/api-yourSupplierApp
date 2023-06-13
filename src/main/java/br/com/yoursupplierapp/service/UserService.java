@@ -5,9 +5,7 @@ import br.com.yoursupplierapp.entity.UserEntity;
 import br.com.yoursupplierapp.exception.BusinessException;
 import br.com.yoursupplierapp.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface UserService {
 
     ResponseEntity<UserEntity> findUserById(Long idUser);
@@ -15,4 +13,6 @@ public interface UserService {
     void createUser(UserDTO userDTO);
 
     void isExistentUser(UserRepository userRepository, UserDTO userDTO) throws BusinessException;
+
+    ResponseEntity<String> updateUserById(UserDTO userDTO, Long id);
 }
