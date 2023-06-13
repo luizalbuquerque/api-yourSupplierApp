@@ -15,7 +15,7 @@ public class OrderEntity {
     private Long idOrder;
 
     @ManyToOne
-    private CustumerEntity custumerEntity;
+    private CustomerEntity customerEntity;
 
     @ManyToOne
     private SupplierEntity supplierEntity;
