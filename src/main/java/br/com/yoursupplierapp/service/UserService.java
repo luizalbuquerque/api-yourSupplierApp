@@ -15,4 +15,6 @@ public interface UserService {
     void isExistentUser(UserRepository userRepository, UserDTO userDTO) throws BusinessException;
 
     ResponseEntity<String> updateUserById(UserDTO userDTO, Long id);
+
+    ResponseEntity<String>  deleteById(Long id);
 }

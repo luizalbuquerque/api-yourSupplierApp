@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "customers")
+@Table(name = "customer")
 public class CustomerEntity extends UserEntity {
 
 }

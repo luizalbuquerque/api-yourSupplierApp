@@ -31,7 +31,7 @@ public class UserController {
             userService.createUser(userDTO);
             return ResponseEntity.ok("User created with success");
         } catch (BusinessException e) {
-            return ResponseEntity.badRequest().body("Erro ao criar usuario: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Error creating user: " + e.getMessage());
         }
     }
 
@@ -45,9 +45,9 @@ public class UserController {
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
             return userService.findUserById(id);
-            //return ResponseEntity.ok(clientService.findUserById(id));  -> Apresenta headers, boddy, status code..
+            //return ResponseEntity.ok(clientService.findUserById(id)); -> Displays headers, body, status code...
         } catch (BusinessException e) {
-            return ResponseEntity.badRequest().body("Erro ao buscar cliente: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Error finding client: " + e.getMessage());
         }
     }
 
@@ -57,6 +57,16 @@ public class UserController {
             @RequestBody UserDTO userDTO,
             @PathVariable("id") Long id) {
         return userService.updateUserById(userDTO, id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(
+            @PathVariable("id") Long id) {
+        try {
+            return userService.deleteById(id);
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().body("Error deleting client: " + e.getMessage());
+        }
     }
 
 }

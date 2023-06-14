@@ -5,6 +5,7 @@ import br.com.yoursupplierapp.entity.UserEntity;
 import br.com.yoursupplierapp.exception.BusinessException;
 import br.com.yoursupplierapp.repository.UserRepository;
 import br.com.yoursupplierapp.service.UserService;
+import br.com.yoursupplierapp.utils.CardStatus;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
             existingClient.setUserName(userDTO.getUserName());
             existingClient.setEmail(userDTO.getEmail());
             existingClient.setPassword(userDTO.getPassword());
-//          existingClient.setUserStatus(CardStatus.ATIVO);
+            existingClient.setCardStatus(userDTO.getCardStatus());
             existingClient.setPassword(userDTO.getPassword());
 
             // Saving changes on the database
@@ -73,6 +74,16 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.ok("User updated successfully");
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body("Error updating client: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> deleteById(Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return ResponseEntity.ok("Client removed successfully");
+        } else {
+            throw new BusinessException("User id number: " + id + " not found in system!");
         }
     }
 
