@@ -12,6 +12,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
 @Service
@@ -24,14 +27,18 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void createRole(RoleDTO roleDTO) {
+    public void createRole(@NotBlank(message = "O nome da role não pode estar em branco") RoleDTO roleDTO) {
 
         isExistentRole(roleRepository, roleDTO);
 
         try {
             RoleEntity roleEntity = new RoleEntity();
-            roleEntity.setRoleName(roleDTO.getRoleName());
-            roleRepository.save(roleEntity);
+            if (StringUtils.hasText(roleDTO.getRoleName())) {
+                roleEntity.setRoleName(roleDTO.getRoleName());
+                roleRepository.save(roleEntity);
+            } else {
+                throw new IllegalArgumentException("O nome da role não pode ser nulo ou em branco");
+            }
 
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException("Erro ao criar usuario: " + e.getMessage());

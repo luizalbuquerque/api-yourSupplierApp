@@ -14,14 +14,14 @@ public class GroupEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idGroup;
 
-    private String nameGroup;
+    private String groupName;
 
     @ManyToMany(mappedBy = "groups")
     private List<UserEntity> users;
 
     @ManyToMany
     @JoinTable(
-            name = "group_role",
+            name = "group_roles",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )

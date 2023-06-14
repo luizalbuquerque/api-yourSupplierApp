@@ -3,6 +3,7 @@ package br.com.yoursupplierapp.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -16,6 +17,4 @@ public class RoleEntity {
 
     private String roleName;
 
-//    @ManyToMany(mappedBy = "roles")
-//    private List<GroupEntity> groupList;
 }

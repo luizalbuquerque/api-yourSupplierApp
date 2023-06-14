@@ -24,11 +24,10 @@ public class UserEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "user_group",
+            name = "user_groups",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
-
     private List<GroupEntity> groups;
 
 }

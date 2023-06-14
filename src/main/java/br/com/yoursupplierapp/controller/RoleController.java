@@ -1,17 +1,13 @@
 package br.com.yoursupplierapp.controller;
 
-
 import br.com.yoursupplierapp.dto.RoleDTO;
-import br.com.yoursupplierapp.dto.UserDTO;
 import br.com.yoursupplierapp.entity.RoleEntity;
-import br.com.yoursupplierapp.entity.UserEntity;
 import br.com.yoursupplierapp.exception.BusinessException;
 import br.com.yoursupplierapp.repository.RoleRepository;
 import br.com.yoursupplierapp.service.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
