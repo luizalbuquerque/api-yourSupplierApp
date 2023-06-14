@@ -1,5 +1,6 @@
 package br.com.yoursupplierapp.entity;
 
+import br.com.yoursupplierapp.utils.CardStatus;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,6 +18,8 @@ public class UserEntity {
     private String userName;
     private String email;
     private String password;
+
+    private CardStatus cardStatus;
 
     @ManyToOne
     private GroupEntity group;
