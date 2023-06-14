@@ -16,8 +16,8 @@ public class GroupEntity {
 
     private String nameGroup;
 
-    @OneToMany(mappedBy = "group")
-    private List<UserEntity> userEntityList;
+    @ManyToMany(mappedBy = "groups")
+    private List<UserEntity> users;
 
     @ManyToMany
     @JoinTable(

@@ -34,7 +34,9 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = new UserEntity();
             userEntity.setUserName(userDTO.getUserName());
             userEntity.setEmail(userDTO.getEmail());
+            userEntity.setCardStatus(CardStatus.ACTIVE);
             userEntity.setPassword(userDTO.getPassword());
+            userEntity.setGroups(userDTO.getGroups());
             userRepository.save(userEntity);
             //If there is already a user with this userName and this Email.
         } catch (DataIntegrityViolationException e) {
@@ -66,8 +68,6 @@ public class UserServiceImpl implements UserService {
             existingClient.setEmail(userDTO.getEmail());
             existingClient.setPassword(userDTO.getPassword());
             existingClient.setCardStatus(userDTO.getCardStatus());
-            existingClient.setPassword(userDTO.getPassword());
-
             // Saving changes on the database
             userRepository.save(existingClient);
 

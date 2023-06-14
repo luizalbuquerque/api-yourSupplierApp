@@ -4,6 +4,7 @@ import br.com.yoursupplierapp.utils.CardStatus;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,7 +22,13 @@ public class UserEntity {
 
     private CardStatus cardStatus;
 
-    @ManyToOne
-    private GroupEntity group;
+    @ManyToMany
+    @JoinTable(
+            name = "user_group",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+
+    private List<GroupEntity> groups;
 
 }

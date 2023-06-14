@@ -5,6 +5,7 @@ import br.com.yoursupplierapp.utils.CardStatus;
 import lombok.Data;
 
 import javax.persistence.ManyToOne;
+import java.util.List;
 
 @Data
 public class UserDTO {
@@ -16,7 +17,7 @@ public class UserDTO {
     private CardStatus cardStatus;
 
     @ManyToOne
-    private GroupEntity group;
+    private List<GroupEntity> groups;
 
 }
 
