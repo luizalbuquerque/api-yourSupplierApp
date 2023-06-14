@@ -14,8 +14,8 @@ public class RoleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRole;
 
-    private String name;
+    private String roleName;
 
-    @ManyToMany(mappedBy = "roles")
-    private List<GroupEntity> groups;
+//    @ManyToMany(mappedBy = "roles")
+//    private List<GroupEntity> groupList;
 }
