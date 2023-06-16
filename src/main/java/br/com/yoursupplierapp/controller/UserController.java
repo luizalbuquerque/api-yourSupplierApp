@@ -26,7 +26,8 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> save(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> save(
+            @RequestBody UserDTO userDTO) {
         try {
             userService.createUser(userDTO);
             return ResponseEntity.ok("User created with success");
@@ -42,7 +43,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id) {
+    public ResponseEntity<?> findById(
+            @PathVariable Long id) {
         try {
             return userService.findUserById(id);
             //return ResponseEntity.ok(clientService.findUserById(id)); -> Displays headers, body, status code...

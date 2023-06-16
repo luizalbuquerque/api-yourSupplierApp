@@ -1,5 +1,6 @@
 package br.com.yoursupplierapp.controller;
 
+import br.com.yoursupplierapp.dto.UserDTO;
 import br.com.yoursupplierapp.dto.WarehouseDTO;
 import br.com.yoursupplierapp.entity.ProductEntity;
 import br.com.yoursupplierapp.entity.WarehouseEntity;
@@ -36,16 +37,37 @@ public class WareHouseController {
         }
     }
 
-    @GetMapping("/{idWarehouse}")
-    public ResponseEntity<?> findById(@PathVariable Long idWarehouse) {
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> update(
+            @RequestBody WarehouseDTO warehouseDTO,
+            @PathVariable("id") Long id) {
+        return wareHouseService.updateWarehouseById(warehouseDTO, id);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
-            return wareHouseService.findWarehouseById(idWarehouse);
-            //return ResponseEntity.ok(clientService.findUserById(id));  -> Apresenta headers, boddy, status code..
+            return wareHouseService.findWarehouseById(id);
         } catch (BusinessException e) {
-            return ResponseEntity.badRequest().body("Erro ao buscar cliente: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Error finding warehouse: " + e.getMessage());
         }
     }
 
+    @GetMapping
+    public ResponseEntity<List<WarehouseEntity>> list() {
+        List<WarehouseEntity> clients = wareHouseRepository.findAll();
+        return ResponseEntity.ok(clients);
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(
+            @PathVariable("id") Long id) {
+        try {
+                return wareHouseService.deleteById(id);
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().body("Error deleting client: " + e.getMessage());
+        }
+    }
 
 }

@@ -12,7 +12,7 @@ public interface WareHouseRepository extends JpaRepository<WarehouseEntity, Long
 
 //      Optional<WarehouseEntity> findProductByName(ProductEntity product);
 //
-        Optional<WarehouseEntity>findById(Long idWarehouse);
+        Optional<WarehouseEntity>findById(Long id);
 //
 //      Optional<WarehouseEntity> findByName(String name);
 }
