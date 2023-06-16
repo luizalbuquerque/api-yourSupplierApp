@@ -14,6 +14,12 @@ public class WarehouseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idWarehouse;
 
+    private String name;
+
+    private String address;
+
+    private int capacity;
+
     @OneToMany(mappedBy = "warehouse")
     private List<ProductEntity> products;
 
