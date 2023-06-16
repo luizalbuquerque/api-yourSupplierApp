@@ -22,4 +22,7 @@ public class ProductEntity {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private OrderEntity order;
+
+
+
 }
