@@ -1,6 +1,7 @@
 package br.com.yoursupplierapp.service.impl;
 
 import br.com.yoursupplierapp.dto.ProductDTO;
+
 import br.com.yoursupplierapp.entity.ProductEntity;
 import br.com.yoursupplierapp.exception.BusinessException;
 import br.com.yoursupplierapp.repository.ProductRepository;
@@ -42,12 +43,29 @@ public class ProductServiceImpl implements ProductService {
         try {
             Optional<ProductEntity> clientOptional = productRepository.findById(id);
             if (!clientOptional.isPresent()) {
-                throw new BusinessException("Client with ID number: " + id + " was not found in the system!");
+                throw new BusinessException("Product with ID number: " + id + " was not found in the system!");
             }
             ProductEntity product = clientOptional.get();
             return ResponseEntity.ok(product);
         } catch (EmptyResultDataAccessException ex) {
-            throw new BusinessException("Client with ID number: " + id + " was not found in the system!");
+            throw new BusinessException("Product with ID number: " + id + " was not found in the system!");
+        }
+    }
+
+    public ResponseEntity<String> updateProductById(ProductDTO productDTO, Long id) {
+        try {
+            ProductEntity existingProduct = productRepository.findById(id)
+                    .orElseThrow(() -> new BusinessException("Product id number: " + id + " not found in system!"));
+
+            // Update customer fields based on dto data
+            existingProduct.setName(productDTO.getName());
+            existingProduct.setPrice(productDTO.getPrice());
+            // Saving changes on the database
+            productRepository.save(existingProduct);
+
+            return ResponseEntity.ok("Product updated successfully");
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().body("Error updating product: " + e.getMessage());
         }
     }
 
@@ -55,9 +73,9 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<String> deleteById(Long id) {
         if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
-            return ResponseEntity.ok("Client removed successfully");
+            return ResponseEntity.ok("Product removed successfully");
         } else {
-            throw new BusinessException("User id number: " + id + " not found in system!");
+            throw new BusinessException("Product id number: " + id + " not found in system!");
         }
     }
 

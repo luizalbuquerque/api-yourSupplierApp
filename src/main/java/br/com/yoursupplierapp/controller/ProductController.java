@@ -59,6 +59,14 @@ public class ProductController {
         }
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> update(
+            @RequestBody ProductDTO productDTO,
+            @PathVariable("id") Long id) {
+        return productService.updateProductById(productDTO, id);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(
             @PathVariable("id") Long id) {
