@@ -14,8 +14,10 @@ import java.util.Optional;
 
 import static br.com.yoursupplierapp.utils.ConstantUtils.DUPLICATED_PAYMENT;
 
+
 @Service
 public class PaymentServicelmpl implements PaymentService {
+
 
  private final PaymentRepository paymentRepository;
 
@@ -27,30 +29,46 @@ public class PaymentServicelmpl implements PaymentService {
 
     @Override
     public void createPayment(PaymentDTO paymentDTO) {
+
+
         isExistentPayment(paymentRepository, paymentDTO);  // Verifique a existência do pagamento
         if ((paymentDTO.getNumCard().length()) != 8) {
             throw new BusinessException("Card number must have 8 characters.");
+
         } else if (paymentDTO.getCvv().length() != 3) {
             throw new BusinessException("Card cvv must have 3 characters.");
+
         } else if (paymentDTO.getExpirationDate().length() != 5) {
-            throw new BusinessException("Card cvv must have 5 characters.");
+            throw new BusinessException("Card date must have 5 characters.");
+
         } else if (paymentDTO.getPaymentValue() == 00.0) {
             throw new BusinessException("Invalid payment value.");
-        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.PIX  && paymentDTO.getPaymentValue() > 3000.0) {
-                throw new BusinessException("Payment value cannot exceed $3000.00 for PIX payments.");
 
-        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.BOLETO  && paymentDTO.getPaymentValue() > 5000.0) {
-                throw new BusinessException("Payment value cannot exceed $5000.00 for bolet payments.");
-
-        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.CREDITO  && paymentDTO.getPaymentValue() > 8000.0) {
-                throw new BusinessException("Payment value cannot exceed $8000.00 for bolet payments.");
-
-        }else if(paymentDTO.getPaymentConstant() == PaymentConstant.DEBITO  && paymentDTO.getPaymentValue() > 10000.0){
-                throw new BusinessException("Payment value cannot exceed $10.000.00 for bolet payments.");
-
-        }else if (paymentDTO.getPaymentValue() > 999999.99) {
-                throw new BusinessException("Payment value cannot exceed 999.999.99.");
+        } switch (paymentDTO.getPaymentConstant()) {
+            case PIX:
+                if (paymentDTO.getPaymentValue() > 3000.0) {
+                    throw new BusinessException("");
+                }
+            case BOLETO:
+                if (paymentDTO.getPaymentValue() > 5000.0) {
+                    throw new BusinessException("Payment value cannot exceed $5000.00 for bole payments.");
+                }
+                break;
+            case CREDITO:
+                if (paymentDTO.getPaymentValue() > 8000.0) {
+                    throw new BusinessException("Payment value cannot exceed $8000.00 for bole payments.");
+                }
+                break;
+            case DEBITO:
+                if (paymentDTO.getPaymentValue() > 10000.0) {
+                    throw new BusinessException("Payment value cannot exceed $10.000.00 for bole payments.");
+                }
+                break;
+            default:
+                // Handle the default case if needed
+                break;
         }
+
         try {
             PaymentEntity paymentEntity = new PaymentEntity();
             paymentEntity.setNumCard(paymentDTO.getNumCard());
