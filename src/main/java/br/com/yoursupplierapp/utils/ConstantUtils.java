@@ -9,4 +9,5 @@ public class ConstantUtils {
     public static final String DUPLICATED_USER = "{duplicated.user}";
     public static final String INVALID_USER_ID = "{invalid.user.id}";
     public static final String USER_NOT_FOUND = "{user.not.found}";
+    public static final String DUPLICATED_PAYMENT = "{duplicated.payment}";
 }
