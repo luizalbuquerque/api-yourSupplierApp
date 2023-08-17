@@ -5,6 +5,7 @@ import br.com.yoursupplierapp.entity.PaymentEntity;
 import br.com.yoursupplierapp.exception.BusinessException;
 import br.com.yoursupplierapp.repository.PaymentRepository;
 import br.com.yoursupplierapp.service.PaymentService;
+import br.com.yoursupplierapp.utils.PaymentConstant;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,35 @@ public class PaymentServicelmpl implements PaymentService {
     public PaymentServicelmpl(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
 
+
     }
 
     @Override
     public void createPayment(PaymentDTO paymentDTO) {
         isExistentPayment(paymentRepository, paymentDTO);  // Verifique a existência do pagamento
+        if ((paymentDTO.getNumCard().length()) != 8) {
+            throw new BusinessException("Card number must have 8 characters.");
+        } else if (paymentDTO.getCvv().length() != 3) {
+            throw new BusinessException("Card cvv must have 3 characters.");
+        } else if (paymentDTO.getExpirationDate().length() != 5) {
+            throw new BusinessException("Card cvv must have 5 characters.");
+        } else if (paymentDTO.getPaymentValue() == 00.0) {
+            throw new BusinessException("Invalid payment value.");
+        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.PIX  && paymentDTO.getPaymentValue() > 3000.0) {
+                throw new BusinessException("Payment value cannot exceed $3000.00 for PIX payments.");
 
+        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.BOLETO  && paymentDTO.getPaymentValue() > 5000.0) {
+                throw new BusinessException("Payment value cannot exceed $5000.00 for bolet payments.");
+
+        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.CREDITO  && paymentDTO.getPaymentValue() > 8000.0) {
+                throw new BusinessException("Payment value cannot exceed $8000.00 for bolet payments.");
+
+        }else if(paymentDTO.getPaymentConstant() == PaymentConstant.DEBITO  && paymentDTO.getPaymentValue() > 10000.0){
+                throw new BusinessException("Payment value cannot exceed $10.000.00 for bolet payments.");
+
+        }else if (paymentDTO.getPaymentValue() > 999999.99) {
+                throw new BusinessException("Payment value cannot exceed 999.999.99.");
+        }
         try {
             PaymentEntity paymentEntity = new PaymentEntity();
             paymentEntity.setNumCard(paymentDTO.getNumCard());
@@ -55,6 +79,30 @@ public class PaymentServicelmpl implements PaymentService {
 
     @Override
     public ResponseEntity<String> updatePayment(PaymentDTO paymentDTO, Long id) {
+        if ((paymentDTO.getNumCard().length()) != 8) {
+            throw new BusinessException("Card number must have 8 characters.");
+        } else if (paymentDTO.getCvv().length() != 3) {
+            throw new BusinessException("Card cvv must have 3 characters.");
+        } else if (paymentDTO.getExpirationDate().length() != 5) {
+            throw new BusinessException("Card cvv must have 5 characters.");
+        } else if (paymentDTO.getPaymentValue() == 00.0) {
+            throw new BusinessException("Invalid payment value.");
+        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.PIX  && paymentDTO.getPaymentValue() > 3000.0) {
+            throw new BusinessException("Payment value cannot exceed $3000.00 for PIX payments.");
+
+        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.BOLETO  && paymentDTO.getPaymentValue() > 5000.0) {
+            throw new BusinessException("Payment value cannot exceed $5000.00 for bolet payments.");
+
+        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.CREDITO  && paymentDTO.getPaymentValue() > 8000.0) {
+            throw new BusinessException("Payment value cannot exceed $8000.00 for bolet payments.");
+
+        }else if(paymentDTO.getPaymentConstant() == PaymentConstant.DEBITO  && paymentDTO.getPaymentValue() > 10000.0){
+            throw new BusinessException("Payment value cannot exceed $10.000.00 for bolet payments.");
+
+        }else if (paymentDTO.getPaymentValue() > 999999.99) {
+            throw new BusinessException("Payment value cannot exceed 999.999.99.");
+        }
+
         try {
             PaymentEntity existingPayment = paymentRepository.findById(id)
                     .orElseThrow(() -> new BusinessException("User id number: " + id + " not found in system!"));
