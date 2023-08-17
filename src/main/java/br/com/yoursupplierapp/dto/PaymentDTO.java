@@ -9,15 +9,15 @@ import java.util.List;
 @Data
 public class PaymentDTO {
 
-    private Long idPayment;
-
     private PaymentConstant paymentConstant;
 
     private String numCard;
 
-    private int cvv;
+    private String cvv;
 
-    private String DateValidity;
+    private String expirationDate;
+
+    private Double paymentValue;
 
     private List<PaymentEntity> paymentEntityList;
 }

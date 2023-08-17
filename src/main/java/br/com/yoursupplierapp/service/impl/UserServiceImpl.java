@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService {
             existingClient.setEmail(userDTO.getEmail());
             existingClient.setPassword(userDTO.getPassword());
             existingClient.setCardStatus(userDTO.getCardStatus());
+
             // Saving changes on the database
             userRepository.save(existingClient);
 
@@ -97,3 +98,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 }
+

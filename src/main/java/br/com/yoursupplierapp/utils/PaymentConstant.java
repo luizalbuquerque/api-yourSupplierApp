@@ -9,4 +9,5 @@ public enum PaymentConstant {
     DEBITO,
 
     BOLETO,
+
 }
