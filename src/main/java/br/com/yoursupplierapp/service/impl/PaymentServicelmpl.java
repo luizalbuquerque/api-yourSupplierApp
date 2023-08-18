@@ -5,7 +5,6 @@ import br.com.yoursupplierapp.entity.PaymentEntity;
 import br.com.yoursupplierapp.exception.BusinessException;
 import br.com.yoursupplierapp.repository.PaymentRepository;
 import br.com.yoursupplierapp.service.PaymentService;
-import br.com.yoursupplierapp.utils.PaymentConstant;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ public class PaymentServicelmpl implements PaymentService {
     public PaymentServicelmpl(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
 
-
     }
 
     @Override
@@ -44,8 +42,9 @@ public class PaymentServicelmpl implements PaymentService {
             throw new BusinessException("Invalid payment value.");
         }
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/yy");
+
         try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/yy");
             YearMonth expirationYearMonth = YearMonth.parse(paymentDTO.getExpirationDate(), dateFormatter);
             if (expirationYearMonth.isBefore(YearMonth.now())) {
                 throw new BusinessException("Card has expired.");
@@ -80,7 +79,7 @@ public class PaymentServicelmpl implements PaymentService {
                 break;
         }
 
-    try {
+        try {
             PaymentEntity paymentEntity = new PaymentEntity();
             paymentEntity.setNumCard(paymentDTO.getNumCard());
             paymentEntity.setCvv(paymentDTO.getCvv());
@@ -93,9 +92,8 @@ public class PaymentServicelmpl implements PaymentService {
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(DUPLICATED_PAYMENT);
 
-            }
         }
-
+    }
 
 
     @Override
@@ -116,20 +114,41 @@ public class PaymentServicelmpl implements PaymentService {
             throw new BusinessException("Card cvv must have 5 characters.");
         } else if (paymentDTO.getPaymentValue() == 00.0) {
             throw new BusinessException("Invalid payment value.");
-        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.PIX  && paymentDTO.getPaymentValue() > 3000.0) {
-            throw new BusinessException("Payment value cannot exceed $3000.00 for PIX payments.");
+        }
+        try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/yy");
+            YearMonth expirationYearMonth = YearMonth.parse(paymentDTO.getExpirationDate(), dateFormatter);
+            if (expirationYearMonth.isBefore(YearMonth.now())) {
+                throw new BusinessException("Card has expired.");
+            }
+        } catch (DateTimeParseException e) {
+            throw new BusinessException("Invalid expiration date format. Please use MM/yy format.");
+        }
+        switch (paymentDTO.getPaymentConstant()) {
+            case PIX:
+                if (paymentDTO.getPaymentValue() > 3000.0) {
+                    throw new BusinessException("Payment value cannot exceed $3000.00 for PIX payments.");
+                }
+                break;
+            case BOLETO:
+                if (paymentDTO.getPaymentValue() > 5000.0) {
+                    throw new BusinessException("Payment value cannot exceed $5000.00 for bole payments.");
+                }
+                break;
+            case CREDITO:
+                if (paymentDTO.getPaymentValue() > 8000.0) {
+                    throw new BusinessException("Payment value cannot exceed $8000.00 for bole payments.");
+                }
+                break;
+            case DEBITO:
+                if (paymentDTO.getPaymentValue() > 10000.0) {
+                    throw new BusinessException("Payment value cannot exceed $10.000.00 for bole payments.");
+                }
+                break;
+            default:
+                // Handle the default case if needed
+                break;
 
-        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.BOLETO  && paymentDTO.getPaymentValue() > 5000.0) {
-            throw new BusinessException("Payment value cannot exceed $5000.00 for bolet payments.");
-
-        } else if (paymentDTO.getPaymentConstant() == PaymentConstant.CREDITO  && paymentDTO.getPaymentValue() > 8000.0) {
-            throw new BusinessException("Payment value cannot exceed $8000.00 for bolet payments.");
-
-        }else if(paymentDTO.getPaymentConstant() == PaymentConstant.DEBITO  && paymentDTO.getPaymentValue() > 10000.0){
-            throw new BusinessException("Payment value cannot exceed $10.000.00 for bolet payments.");
-
-        }else if (paymentDTO.getPaymentValue() > 999999.99) {
-            throw new BusinessException("Payment value cannot exceed 999.999.99.");
         }
 
         try {
@@ -141,6 +160,7 @@ public class PaymentServicelmpl implements PaymentService {
             existingPayment.setPaymentValue(paymentDTO.getPaymentValue());
             existingPayment.setExpirationDate(paymentDTO.getExpirationDate());
             existingPayment.setCvv(paymentDTO.getCvv());
+            existingPayment.setPaymentConstant(paymentDTO.getPaymentConstant());
 
 
             paymentRepository.save(existingPayment);
