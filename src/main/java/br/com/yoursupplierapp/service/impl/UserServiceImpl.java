@@ -96,5 +96,9 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByUserName(userDTO.getUserName()).isPresent()) {
             throw new BusinessException("User with name: " + userDTO.getUserName() + " already registered in the system!");
         }
+
+
+
+        //Comentario de Luigi teste
     }
 }
