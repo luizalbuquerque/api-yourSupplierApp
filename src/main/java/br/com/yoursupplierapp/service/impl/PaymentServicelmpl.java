@@ -9,14 +9,19 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 import static br.com.yoursupplierapp.utils.ConstantUtils.DUPLICATED_PAYMENT;
 
+
 @Service
 public class PaymentServicelmpl implements PaymentService {
 
- private final PaymentRepository paymentRepository;
+
+    private final PaymentRepository paymentRepository;
 
     public PaymentServicelmpl(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
@@ -25,7 +30,54 @@ public class PaymentServicelmpl implements PaymentService {
 
     @Override
     public void createPayment(PaymentDTO paymentDTO) {
-        isExistentPayment(paymentRepository, paymentDTO);  // Verifique a existência do pagamento
+        isExistentPayment(paymentRepository, paymentDTO);
+
+        if (paymentDTO.getNumCard().length() != 8) {
+            throw new BusinessException("Card number must have 8 characters.");
+        } else if (paymentDTO.getCvv().length() != 3) {
+            throw new BusinessException("Card cvv must have 3 characters.");
+        } else if (paymentDTO.getExpirationDate().length() != 5) {
+            throw new BusinessException("Card date must have 5 characters.");
+        } else if (paymentDTO.getPaymentValue() == 0.0) {
+            throw new BusinessException("Invalid payment value.");
+        }
+
+
+        try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/yy");
+            YearMonth expirationYearMonth = YearMonth.parse(paymentDTO.getExpirationDate(), dateFormatter);
+            if (expirationYearMonth.isBefore(YearMonth.now())) {
+                throw new BusinessException("Card has expired.");
+            }
+        } catch (DateTimeParseException e) {
+            throw new BusinessException("Invalid expiration date format. Please use MM/yy format.");
+        }
+
+        switch (paymentDTO.getPaymentConstant()) {
+            case PIX:
+                if (paymentDTO.getPaymentValue() > 3000.0) {
+                    throw new BusinessException("Payment value cannot exceed $3000.00 for PIX payments.");
+                }
+                break;
+            case BOLETO:
+                if (paymentDTO.getPaymentValue() > 5000.0) {
+                    throw new BusinessException("Payment value cannot exceed $5000.00 for bole payments.");
+                }
+                break;
+            case CREDITO:
+                if (paymentDTO.getPaymentValue() > 8000.0) {
+                    throw new BusinessException("Payment value cannot exceed $8000.00 for bole payments.");
+                }
+                break;
+            case DEBITO:
+                if (paymentDTO.getPaymentValue() > 10000.0) {
+                    throw new BusinessException("Payment value cannot exceed $10.000.00 for bole payments.");
+                }
+                break;
+            default:
+                // Handle the default case if needed
+                break;
+        }
 
         try {
             PaymentEntity paymentEntity = new PaymentEntity();
@@ -40,9 +92,8 @@ public class PaymentServicelmpl implements PaymentService {
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(DUPLICATED_PAYMENT);
 
-            }
         }
-
+    }
 
 
     @Override
@@ -55,6 +106,51 @@ public class PaymentServicelmpl implements PaymentService {
 
     @Override
     public ResponseEntity<String> updatePayment(PaymentDTO paymentDTO, Long id) {
+        if ((paymentDTO.getNumCard().length()) != 8) {
+            throw new BusinessException("Card number must have 8 characters.");
+        } else if (paymentDTO.getCvv().length() != 3) {
+            throw new BusinessException("Card cvv must have 3 characters.");
+        } else if (paymentDTO.getExpirationDate().length() != 5) {
+            throw new BusinessException("Card cvv must have 5 characters.");
+        } else if (paymentDTO.getPaymentValue() == 00.0) {
+            throw new BusinessException("Invalid payment value.");
+        }
+        try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/yy");
+            YearMonth expirationYearMonth = YearMonth.parse(paymentDTO.getExpirationDate(), dateFormatter);
+            if (expirationYearMonth.isBefore(YearMonth.now())) {
+                throw new BusinessException("Card has expired.");
+            }
+        } catch (DateTimeParseException e) {
+            throw new BusinessException("Invalid expiration date format. Please use MM/yy format.");
+        }
+        switch (paymentDTO.getPaymentConstant()) {
+            case PIX:
+                if (paymentDTO.getPaymentValue() > 3000.0) {
+                    throw new BusinessException("Payment value cannot exceed $3000.00 for PIX payments.");
+                }
+                break;
+            case BOLETO:
+                if (paymentDTO.getPaymentValue() > 5000.0) {
+                    throw new BusinessException("Payment value cannot exceed $5000.00 for bole payments.");
+                }
+                break;
+            case CREDITO:
+                if (paymentDTO.getPaymentValue() > 8000.0) {
+                    throw new BusinessException("Payment value cannot exceed $8000.00 for bole payments.");
+                }
+                break;
+            case DEBITO:
+                if (paymentDTO.getPaymentValue() > 10000.0) {
+                    throw new BusinessException("Payment value cannot exceed $10.000.00 for bole payments.");
+                }
+                break;
+            default:
+
+                break;
+
+        }
+
         try {
             PaymentEntity existingPayment = paymentRepository.findById(id)
                     .orElseThrow(() -> new BusinessException("User id number: " + id + " not found in system!"));
@@ -64,6 +160,7 @@ public class PaymentServicelmpl implements PaymentService {
             existingPayment.setPaymentValue(paymentDTO.getPaymentValue());
             existingPayment.setExpirationDate(paymentDTO.getExpirationDate());
             existingPayment.setCvv(paymentDTO.getCvv());
+            existingPayment.setPaymentConstant(paymentDTO.getPaymentConstant());
 
 
             paymentRepository.save(existingPayment);
